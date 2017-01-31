@@ -135,6 +135,7 @@ BEGIN_MESSAGE_MAP(CDialogSet, CDialog)
 	ON_BN_CLICKED(IDC_CHECK_IO_OUT_POWER, OnCheckIoOutPower)
 	ON_CBN_SELCHANGE(IDC_COMBO_CAR_TYPE, OnSelchangeComboCarType)
 	//}}AFX_MSG_MAP
+	ON_BN_CLICKED(IDCANCEL, &CDialogSet::OnBnClickedCancel)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -561,3 +562,10 @@ void CDialogSet::OnSelchangeComboCarType()
 }
 
 
+
+
+void CDialogSet::OnBnClickedCancel()
+{
+	// TODO: Add your control notification handler code here
+	CDialog::OnCancel();
+}

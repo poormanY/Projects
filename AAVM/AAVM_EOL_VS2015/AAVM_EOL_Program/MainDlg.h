@@ -13,6 +13,7 @@
 #include "DialogSet.h"
 //#include "pcan_inf.h"
 #include "TextStatic.h"
+#include "afxwin.h"
 
 ////////////////////////////////////////////////////////////////////////////
 // Create Console Window for printf()
@@ -161,6 +162,7 @@ public:
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();
 	afx_msg void OnBnClickedOk();
+	CComboBox m_ctrl_program_type;
 };
 
 //{{AFX_INSERT_LOCATION}}

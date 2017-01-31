@@ -106,7 +106,7 @@ typedef enum
     _MODE_MASTER_GOOD,
     _MODE_MASTER_BAD,
     _MODE_MAIN,
-	_MODE_MAIN_2TH
+	_MODE_MAIN_2ND
 } TEST_MODE;
 
 #define _MODE_START_DEFAULT _MODE_MASTER_GOOD
@@ -1451,7 +1451,7 @@ static bool Step_SaveLogFile(const char *a_pszBarcodeCase, const char *a_pszBarc
     {
         fprintf(pFileLog, "\n불량 마스터 테스트 모드, %d\n", pMainDlg->m_EDIT_TEST_NUM_ALL+1);
     }
-    else if(iMainThreadTestMode == _MODE_MAIN_2TH)
+    else if(iMainThreadTestMode == _MODE_MAIN_2ND)
     {
 		fprintf(pFileLog, "\n케이스 바코드, %s\n", a_pszBarcodeCase);
 		//psj 바코드 작업 수정 진행 필요.
@@ -2418,6 +2418,10 @@ static bool Step_Test_AAVM_ALL(void)
 		/////////////////////////////////////
         //AAVO Test//////////////////////////
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 옴니(전)");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "옴니(전)");
+
         MakeMsg_AAVCS(&oCanMsg, 0, 0);
         wCAN_Prev_GetCnt = wCAN_AAVO_GetCnt;
         pCan->Write(&oCanMsg);
@@ -2436,9 +2440,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 옴니(전)");
-        pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "옴니(전)");
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, pMainDlg->m_EDIT_AAVM_VIEW_MODE);
         if (strcmp(pMainDlg->m_EDIT_AAVM_VIEW_MODE, "옴니(전)") == 0)
         {
@@ -2452,6 +2453,10 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 옴니(후)");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "옴니(후)");
+
         MakeMsg_AAVCS(&oCanMsg, 1, 0);
         wCAN_Prev_GetCnt = wCAN_AAVO_GetCnt;
         pCan->Write(&oCanMsg);
@@ -2470,9 +2475,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 옴니(후)");
-        pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "옴니(후)");
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, pMainDlg->m_EDIT_AAVM_VIEW_MODE);
         if (strcmp(pMainDlg->m_EDIT_AAVM_VIEW_MODE, "옴니(후)") == 0)
         {
@@ -2486,6 +2488,10 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 옴니(좌)");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "옴니(좌)");
+
         MakeMsg_AAVCS(&oCanMsg, 8, 0);
         wCAN_Prev_GetCnt = wCAN_AAVO_GetCnt;
         pCan->Write(&oCanMsg);
@@ -2504,9 +2510,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 옴니(좌)");
-        pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "옴니(좌)");
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, pMainDlg->m_EDIT_AAVM_VIEW_MODE);
         if (strcmp(pMainDlg->m_EDIT_AAVM_VIEW_MODE, "옴니(좌)") == 0)
         {
@@ -2520,6 +2523,10 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 옴니(우)");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "옴니(우)");
+
         MakeMsg_AAVCS(&oCanMsg, 9, 0);
         wCAN_Prev_GetCnt = wCAN_AAVO_GetCnt;
         pCan->Write(&oCanMsg);
@@ -2538,9 +2545,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 옴니(우)");
-        pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "옴니(우)");
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, pMainDlg->m_EDIT_AAVM_VIEW_MODE);
         if (strcmp(pMainDlg->m_EDIT_AAVM_VIEW_MODE, "옴니(우)") == 0)
         {
@@ -2554,6 +2558,10 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 버드뷰");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "버드뷰");
+
         MakeMsg_AAVCS(&oCanMsg, 2, 0);
         wCAN_Prev_GetCnt = wCAN_AAVO_GetCnt;
         pCan->Write(&oCanMsg);
@@ -2572,9 +2580,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 버드뷰");
-        pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "버드뷰");
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, pMainDlg->m_EDIT_AAVM_VIEW_MODE);
         if (strcmp(pMainDlg->m_EDIT_AAVM_VIEW_MODE, "버드뷰") == 0)
         {
@@ -2588,6 +2593,10 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 4채널");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "4채널");
+
         MakeMsg_AAVCS(&oCanMsg, 3, 0);
         wCAN_Prev_GetCnt = wCAN_AAVO_GetCnt;
         pCan->Write(&oCanMsg);
@@ -2606,9 +2615,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 4채널");
-        pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "4채널");
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, pMainDlg->m_EDIT_AAVM_VIEW_MODE);
         if (strcmp(pMainDlg->m_EDIT_AAVM_VIEW_MODE, "4채널") == 0)
         {
@@ -2622,6 +2628,10 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 전방");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "전방");
+
         MakeMsg_AAVCS(&oCanMsg, 4, 0);
         wCAN_Prev_GetCnt = wCAN_AAVO_GetCnt;
         pCan->Write(&oCanMsg);
@@ -2640,9 +2650,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 전방");
-        pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "전방");
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, pMainDlg->m_EDIT_AAVM_VIEW_MODE);
         if (strcmp(pMainDlg->m_EDIT_AAVM_VIEW_MODE, "전방") == 0)
         {
@@ -2656,6 +2663,10 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 후방");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "후방");
+
         MakeMsg_AAVCS(&oCanMsg, 5, 0);
         wCAN_Prev_GetCnt = wCAN_AAVO_GetCnt;
         pCan->Write(&oCanMsg);
@@ -2674,9 +2685,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 후방");
-        pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "후방");
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, pMainDlg->m_EDIT_AAVM_VIEW_MODE);
         if (strcmp(pMainDlg->m_EDIT_AAVM_VIEW_MODE, "후방") == 0)
         {
@@ -2690,6 +2698,10 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 좌측");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "좌측");
+
         MakeMsg_AAVCS(&oCanMsg, 6, 0);
         wCAN_Prev_GetCnt = wCAN_AAVO_GetCnt;
         pCan->Write(&oCanMsg);
@@ -2708,9 +2720,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 좌측");
-        pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "좌측");
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, pMainDlg->m_EDIT_AAVM_VIEW_MODE);
         if (strcmp(pMainDlg->m_EDIT_AAVM_VIEW_MODE, "좌측") == 0)
         {
@@ -2724,6 +2733,10 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 우측");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "우측");
+
         MakeMsg_AAVCS(&oCanMsg, 7, 0);
         wCAN_Prev_GetCnt = wCAN_AAVO_GetCnt;
         pCan->Write(&oCanMsg);
@@ -2742,9 +2755,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 우측");
-        pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "우측");
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, pMainDlg->m_EDIT_AAVM_VIEW_MODE);
         if (strcmp(pMainDlg->m_EDIT_AAVM_VIEW_MODE, "우측") == 0)
         {
@@ -2758,6 +2768,10 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////// Return Default View Mode //////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 옴니(전)");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "옴니(전)");
+
         MakeMsg_AAVCS(&oCanMsg, 0, 0);
         wCAN_Prev_GetCnt = wCAN_AAVO_GetCnt;
         pCan->Write(&oCanMsg);
@@ -2776,9 +2790,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "출력 화면 뷰 모드 - 옴니(전)");
-        pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "옴니(전)");
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, pMainDlg->m_EDIT_AAVM_VIEW_MODE);
         if (strcmp(pMainDlg->m_EDIT_AAVM_VIEW_MODE, "옴니(전)") == 0)
         {
@@ -2793,6 +2804,9 @@ static bool Step_Test_AAVM_ALL(void)
 		/////////////////////////////////////
         //AAVCS Test/////////////////////////
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - 사용자 스위치 Off");
+
         pMainDlg->m_EDIT_ESROS_WIPER = 0;
         pMainDlg->m_EDIT_ESROS_INTWIPER = 0;
         pMainDlg->PostMessage(_WM_THREAD_UPDATE);
@@ -2817,8 +2831,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - 사용자 스위치 Off");
         pszTgt = "사용자 Off(On)";
         stMsg.Format("사용자 Off(%s)", 
             (pMainDlg->m_CHECK_MODE_MANUAL_OFF == FALSE)? "Off": "On");
@@ -2837,6 +2849,9 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         // IMOD 상태
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "IMOD 상태 - 사용자 스위치 Off");
+
         wCAN_Prev_GetCnt = wCAN_AAVO_GetCnt;
 		CAN_TimeOutcnt = 0;
         while ( (wCAN_Prev_GetCnt+1) >= wCAN_AAVO_GetCnt)
@@ -2853,8 +2868,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "IMOD 상태 - 사용자 스위치 Off");
         pszTgt = "수동 Off";
         pszSrc = pMainDlg->m_EDIT_AAVM_IMOD_STATUS;
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, pszTgt);
@@ -2871,6 +2884,9 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - 사용자 스위치 On");
+
         MakeMsg_AAVCS(&oCanMsg, 0, 1);
         pCan->Write(&oCanMsg);
 		CAN_TimeOutcnt = 0;
@@ -2891,8 +2907,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - 사용자 스위치 On");
         pszTgt = "사용자 Off(Off)";
         stMsg.Format("사용자 Off(%s)", 
             (pMainDlg->m_CHECK_MODE_MANUAL_OFF == FALSE)? "Off": "On");
@@ -2911,6 +2925,9 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         // IMOD 상태
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "IMOD 상태 - 사용자 스위치 On");
+
         wCAN_Prev_GetCnt = wCAN_AAVO_GetCnt;
 		CAN_TimeOutcnt = 0;
         while ( (wCAN_Prev_GetCnt+1) >= wCAN_AAVO_GetCnt)
@@ -2927,8 +2944,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "IMOD 상태 - 사용자 스위치 On");
         pszTgt = "정상작동";
         pszSrc = pMainDlg->m_EDIT_AAVM_IMOD_STATUS;
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, pszTgt);
@@ -2951,6 +2966,9 @@ static bool Step_Test_AAVM_ALL(void)
         pMainDlg->PostMessage(_WM_THREAD_UPDATE);
 
         // 인식모드
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - Wiper On");
+
 		CAN_TimeOutcnt = 0;
         wCAN_Prev_GetCnt = wCAN_AAVM_GetCnt;
         while ( (wCAN_Prev_GetCnt+1) >= wCAN_AAVM_GetCnt)
@@ -2967,8 +2985,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - Wiper On");
         pszTgt = "Wiper(On)";
         stMsg.Format("Wiper(%s)", 
             (pMainDlg->m_CHECK_MODE_WIPER == FALSE)? "Off": "On");
@@ -2987,6 +3003,9 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         // IMOD 상태
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "IMOD 상태 - Wiper On");
+
 		CAN_TimeOutcnt = 0;
         wCAN_Prev_GetCnt = wCAN_AAVO_GetCnt;
         while ( (wCAN_Prev_GetCnt+7) >= wCAN_AAVO_GetCnt)
@@ -3003,8 +3022,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "IMOD 상태 - Wiper On");
         pszTgt = "자동 Off";
         pszSrc = pMainDlg->m_EDIT_AAVM_IMOD_STATUS;
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, pszTgt);
@@ -3021,6 +3038,9 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - Wiper Off");
+
         pMainDlg->m_EDIT_ESROS_WIPER = 0;
         pMainDlg->m_EDIT_ESROS_INTWIPER = 0;
         pMainDlg->PostMessage(_WM_THREAD_UPDATE);
@@ -3042,8 +3062,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - Wiper Off");
         pszTgt = "Wiper(Off)";
         stMsg.Format("Wiper(%s)", 
             (pMainDlg->m_CHECK_MODE_WIPER == FALSE)? "Off": "On");
@@ -3062,6 +3080,9 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         // IMOD 상태
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "IMOD 상태 - Wiper Off");
+
 		CAN_TimeOutcnt = 0;
         wCAN_Prev_GetCnt = wCAN_AAVO_GetCnt;
         while ( (wCAN_Prev_GetCnt+7) >= wCAN_AAVO_GetCnt)
@@ -3078,8 +3099,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "IMOD 상태 - Wiper Off");
         pszTgt = "정상작동";
         pszSrc = pMainDlg->m_EDIT_AAVM_IMOD_STATUS;
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, pszTgt);
@@ -3096,6 +3115,9 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - Int.Wiper On");
+
         pMainDlg->m_EDIT_ESROS_WIPER = 0;
         pMainDlg->m_EDIT_ESROS_INTWIPER = 1;
         pMainDlg->PostMessage(_WM_THREAD_UPDATE);
@@ -3117,8 +3139,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - Int.Wiper On");
         pszTgt = "Int.Wiper(On)";
         stMsg.Format("Int.Wiper(%s)", 
             (pMainDlg->m_CHECK_MODE_INTWIPER == FALSE)? "Off": "On");
@@ -3137,6 +3157,9 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         // IMOD 상태
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "IMOD 상태 - Int.Wiper On");
+
 		CAN_TimeOutcnt = 0;
         wCAN_Prev_GetCnt = wCAN_AAVO_GetCnt;
         while ( (wCAN_Prev_GetCnt+7) >= wCAN_AAVO_GetCnt)
@@ -3153,8 +3176,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "IMOD 상태 - Int.Wiper On");
         pszTgt = "자동 Off";
         pszSrc = pMainDlg->m_EDIT_AAVM_IMOD_STATUS;
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, pszTgt);
@@ -3171,6 +3192,9 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - Int.Wiper Off");
+
         pMainDlg->m_EDIT_ESROS_WIPER = 0;
         pMainDlg->m_EDIT_ESROS_INTWIPER = 0;
         pMainDlg->PostMessage(_WM_THREAD_UPDATE);
@@ -3192,8 +3216,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - Int.Wiper Off");
         pszTgt = "Int.Wiper(Off)";
         stMsg.Format("Int.Wiper(%s)", 
             (pMainDlg->m_CHECK_MODE_INTWIPER == FALSE)? "Off": "On");
@@ -3246,6 +3268,10 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - 주행중");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "주행(On), 회전(Off), 작업(Off)");
+
         pMainDlg->m_EDIT_MMS_MOVE    = 1;
         pMainDlg->m_EDIT_HP1_ARM     = 80;
         pMainDlg->m_EDIT_HP3_SWING   = 80;
@@ -3269,9 +3295,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - 주행중");
-        pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "주행(On), 회전(Off), 작업(Off)");
 
         stMsg.Format("주행(%s), 회전(%s), 작업(%s)", 
             (pMainDlg->m_CHECK_MODE_MOVE  == FALSE)? "Off": "On",
@@ -3291,6 +3314,10 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - 회전중");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "주행(Off), 회전(On), 작업(Off)");
+
         pMainDlg->m_EDIT_MMS_MOVE    = 0;
         pMainDlg->m_EDIT_HP1_ARM     = 80;
         pMainDlg->m_EDIT_HP3_SWING   = 81;
@@ -3313,11 +3340,7 @@ static bool Step_Test_AAVM_ALL(void)
 				break;
 			}
         }
-
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - 회전중");
-        pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "주행(Off), 회전(On), 작업(Off)");
-
+		
         stMsg.Format("주행(%s), 회전(%s), 작업(%s)", 
             (pMainDlg->m_CHECK_MODE_MOVE  == FALSE)? "Off": "On",
             (pMainDlg->m_CHECK_MODE_SWING == FALSE)? "Off": "On",
@@ -3336,6 +3359,10 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - 작업중");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "주행(Off), 회전(Off), 작업(On)");
+
         pMainDlg->m_EDIT_MMS_MOVE    = 0;
         pMainDlg->m_EDIT_HP1_ARM     = 81;
         pMainDlg->m_EDIT_HP3_SWING   = 80;
@@ -3359,9 +3386,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - 작업중");
-        pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "주행(Off), 회전(Off), 작업(On)");
 
         stMsg.Format("주행(%s), 회전(%s), 작업(%s)", 
             (pMainDlg->m_CHECK_MODE_MOVE  == FALSE)? "Off": "On",
@@ -3381,6 +3405,10 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - 작업중");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "주행(Off), 회전(Off), 작업(On)");
+
         pMainDlg->m_EDIT_MMS_MOVE    = 0;
         pMainDlg->m_EDIT_HP1_ARM     = 80;
         pMainDlg->m_EDIT_HP3_SWING   = 80;
@@ -3404,10 +3432,6 @@ static bool Step_Test_AAVM_ALL(void)
 			}
         }
 
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - 작업중");
-        pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "주행(Off), 회전(Off), 작업(On)");
-
         stMsg.Format("주행(%s), 회전(%s), 작업(%s)", 
             (pMainDlg->m_CHECK_MODE_MOVE  == FALSE)? "Off": "On",
             (pMainDlg->m_CHECK_MODE_SWING == FALSE)? "Off": "On",
@@ -3426,6 +3450,10 @@ static bool Step_Test_AAVM_ALL(void)
         }
 
         /////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - 작업중");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "주행(Off), 회전(Off), 작업(On)");
+
         pMainDlg->m_EDIT_MMS_MOVE    = 0;
         pMainDlg->m_EDIT_HP1_ARM     = 80;
         pMainDlg->m_EDIT_HP3_SWING   = 80;
@@ -3448,10 +3476,6 @@ static bool Step_Test_AAVM_ALL(void)
 				break;
 			}
         }
-
-        nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-        pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "인식모드 - 작업중");
-        pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "주행(Off), 회전(Off), 작업(On)");
 
         stMsg.Format("주행(%s), 회전(%s), 작업(%s)", 
             (pMainDlg->m_CHECK_MODE_MOVE  == FALSE)? "Off": "On",
@@ -3563,6 +3587,10 @@ static bool Step_Test_AAVM_ALL(void)
 		ui_FStartNumber=1;
 		ui_FStopNumber=290;
 
+		////////////////////////////////////////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "영상인식 구간 A");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "주의");
 		while(IMOD_TimeOut<31)
 		{
 			IMOD_TimeOut++;
@@ -3576,9 +3604,6 @@ static bool Step_Test_AAVM_ALL(void)
 			pRImgDlg->RightDraw(strRImagePath,ui_RStartNumber,ui_RStopNumber);
 			Sleep(100);
 		}
-		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "영상인식 구간 A");
-		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "주의");
 		if(recognition == true)
 		{
 			pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, "주의");
@@ -3594,6 +3619,10 @@ static bool Step_Test_AAVM_ALL(void)
 		}
 		recognition = false;
 
+		////////////////////////////////////////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "영상인식 구간 B");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "위험");
 		while(IMOD_TimeOut<61)
 		{
 			IMOD_TimeOut++;
@@ -3607,9 +3636,6 @@ static bool Step_Test_AAVM_ALL(void)
 			pRImgDlg->RightDraw(strRImagePath,ui_RStartNumber,ui_RStopNumber);
 			Sleep(100);
 		}
-		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "영상인식 구간 B");
-		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "위험");
 		if(recognition == true)
 		{
 			pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, "위험");
@@ -3624,6 +3650,10 @@ static bool Step_Test_AAVM_ALL(void)
 		}
 		recognition = false;
 
+		////////////////////////////////////////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "영상인식 구간 C");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "주의");
 		while(IMOD_TimeOut<156)
 		{
 			IMOD_TimeOut++;
@@ -3637,9 +3667,6 @@ static bool Step_Test_AAVM_ALL(void)
 			pRImgDlg->RightDraw(strRImagePath,ui_RStartNumber,ui_RStopNumber);
 			Sleep(100);
 		}
-		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "영상인식 구간 C");
-		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "주의");
 		if(recognition == true)
 		{
 			pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, "주의");
@@ -3654,6 +3681,10 @@ static bool Step_Test_AAVM_ALL(void)
 		}
 		recognition = false;
 
+		////////////////////////////////////////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "영상인식 구간 D");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "위험");
 		while(IMOD_TimeOut<191)
 		{
 			IMOD_TimeOut++;
@@ -3667,9 +3698,6 @@ static bool Step_Test_AAVM_ALL(void)
 			pRImgDlg->RightDraw(strRImagePath,ui_RStartNumber,ui_RStopNumber);
 			Sleep(100);
 		}
-		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "영상인식 구간 D");
-		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "위험");
 		if(recognition == true)
 		{
 			pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, "위험");
@@ -3685,6 +3713,10 @@ static bool Step_Test_AAVM_ALL(void)
 		}
 		recognition = false;
 
+		////////////////////////////////////////////////////////////////////////
+		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
+		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "영상인식 구간 E");
+		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "주의");
 		while(IMOD_TimeOut<291)
 		{
 			IMOD_TimeOut++;
@@ -3698,9 +3730,6 @@ static bool Step_Test_AAVM_ALL(void)
 			pRImgDlg->RightDraw(strRImagePath,ui_RStartNumber,ui_RStopNumber);
 			Sleep(100);
 		}
-		nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
-		pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "영상인식 구간 E");
-		pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, "주의");
 		if(recognition == true)
 		{
 			pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, "주의");
@@ -3856,9 +3885,9 @@ UINT MainThread(LPVOID pParam)
 	}
 	else if(pMainDlg->m_COMBO_PROGRAM_TYPE=="최종검사2(ASSY)")
 	{
-		iMainThreadTestMode = _MODE_MAIN_2TH;
+		iMainThreadTestMode = _MODE_MAIN_2ND;
 
-		szTemp.Format("D:\\AAVM_LOG(2TH)\\%s %d-%02d-%02d.log", pSetupDlg->m_COMBO_CAR_TYPE, t.GetYear(), t.GetMonth(), t.GetDay());
+		szTemp.Format("D:\\AAVM_LOG(2ND)\\%s %d-%02d-%02d.log", pSetupDlg->m_COMBO_CAR_TYPE, t.GetYear(), t.GetMonth(), t.GetDay());
 		pSetupDlg->m_EDIT_FILENAME_LOG = szTemp;
 	}
 	else
@@ -4202,7 +4231,7 @@ UINT MainThread(LPVOID pParam)
 				continue;
 			}
 		}
-		else if( (tMainThreadTestError == false) && (iMainThreadTestMode == _MODE_MAIN_2TH) )
+		else if( (tMainThreadTestError == false) && (iMainThreadTestMode == _MODE_MAIN_2ND) )
 		{
 			if (Step_ReadBarcode1_Case2() == false)
 			{
@@ -4345,7 +4374,7 @@ UINT MainThread(LPVOID pParam)
 				tMainThreadTestError = true;
 			}
 		}
-		else if(iMainThreadTestMode == _MODE_MAIN_2TH)
+		else if(iMainThreadTestMode == _MODE_MAIN_2ND)
 		{
 			tBarcodeOk = Step_ReadBarcode2_Case2(szBarcodeCase);
 			if (tBarcodeOk == false)

@@ -14,7 +14,7 @@
 // CGifMakerApp
 
 BEGIN_MESSAGE_MAP(CGifMakerApp, CWinApp)
-	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
+	//ON_COMMAND(ID_HELP, &CWinApp::OnHelp)		// F1 -> help window
 END_MESSAGE_MAP()
 
 

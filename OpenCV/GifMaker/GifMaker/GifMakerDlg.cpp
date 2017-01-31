@@ -11,10 +11,35 @@
 #define new DEBUG_NEW
 #endif
 
-
 ///////////////////////////////////////////////////////////////////
 // define
-#define RGB_TRANSPARANT RGB(123, 132, 231)
+// Transparant color
+#define RGB_TRANSPARANT			RGB(123, 132, 231)
+// Eye Soft color
+#define SOFT_GREEN              RGB(163,204,163)
+#define SOFT_LTGREEN            RGB(181,214,146)
+#define SOFT_BLUE               RGB(214,230,245)
+
+#define BLACK					RGB(0, 0, 0)
+#define WHITE					RGB(255, 255, 255)
+#define GREEN					RGB(0, 255, 0)
+#define RED						RGB(255, 0, 0)
+#define BLUE					RGB(0, 0, 255)
+
+// Monitor Type
+#define TYPE_CUSTOMIZING		_T("Customizing")
+
+// Command
+#define F5_IMAGE_START			_T("F5 REC")
+#define F5_IMAGE_WAIT			_T("F5 Waiting")
+#define F5_IMAGE_STOP			_T("F5 Stop")
+
+// File Path
+#define FILE_PATH_DEFAULT		_T("C:\\Users\\YSW\\Pictures\\Capture")
+
+///////////////////////////////////////////////////////////////////
+// global variable
+HHOOK g_hook = NULL;
 
 ///////////////////////////////////////////////////////////////////
 // static variable
@@ -32,6 +57,10 @@ enum _TimerID
 };
 
 static CRect* MonitorsRect = NULL;
+static BOOL isDlgInit = FALSE;
+static const CPoint DlgMinSize = CPoint(300, 100);
+
+
 
 // CAboutDlg dialog used for App About
 
@@ -88,6 +117,8 @@ void CGifMakerDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_REC_FPS, m_edit_rec_fps);
 	DDX_Control(pDX, IDC_EDIT_REC_TIME, m_edit_rec_time);
 	DDX_Control(pDX, IDC_BUTTON_REC, m_btn_rec);
+	DDX_Control(pDX, IDC_EDIT_SIZE, m_edit_size);
+	DDX_Control(pDX, IDC_EDIT_FILE_PATH, m_edit_file_path);
 }
 
 BEGIN_MESSAGE_MAP(CGifMakerDlg, CDialogEx)
@@ -108,6 +139,14 @@ BEGIN_MESSAGE_MAP(CGifMakerDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_AREA_SETTING, &CGifMakerDlg::OnBnClickedButtonAreaSetting)
 	ON_BN_CLICKED(IDC_BUTTON_REC, &CGifMakerDlg::OnBnClickedButtonRec)
 	ON_WM_TIMER()
+	ON_WM_ERASEBKGND()
+	ON_WM_CLOSE()
+	ON_EN_CHANGE(IDC_EDIT_LEFT, &CGifMakerDlg::OnEnChangeEditLeft)
+	ON_EN_CHANGE(IDC_EDIT_RIGHT, &CGifMakerDlg::OnEnChangeEditRight)
+	ON_EN_CHANGE(IDC_EDIT_TOP, &CGifMakerDlg::OnEnChangeEditTop)
+	ON_EN_CHANGE(IDC_EDIT_BOTTOM, &CGifMakerDlg::OnEnChangeEditBottom)
+	ON_WM_MOVE()
+	ON_BN_CLICKED(IDC_BUTTON_FILE_NAME, &CGifMakerDlg::OnBnClickedButtonFileName)
 END_MESSAGE_MAP()
 
 
@@ -175,6 +214,10 @@ BOOL CGifMakerDlg::OnInitDialog()
 		}
 	}
 
+	// set file path
+	m_edit_file_path.SetWindowTextW(FILE_PATH_DEFAULT);
+	m_nCaptureNum = 1;
+
 	// Monitor Type  Combo Box
 	int comboIdx;
 	CString strMonitorType;
@@ -183,13 +226,27 @@ BOOL CGifMakerDlg::OnInitDialog()
 		strMonitorType.Format(_T("Monitor %d"), comboIdx);
 		m_combo_monitor_type.AddString(strMonitorType);
 	}
+	m_combo_monitor_type.AddString(TYPE_CUSTOMIZING);
 	m_combo_monitor_type.SetCurSel(0);
-	// set cpature area - default
+	// set capture area - default
 	OnCbnSelchangeComboMonitorType();
-	
+	// set capture size
+	SetCaptureSize();
+	// set capture area - transparant
+	SetCaptureAreaTransparant();
+
 	// set recording info - FPS, Times
-	m_edit_rec_fps.SetWindowTextW(_T("10"));
-	m_edit_rec_time.SetWindowTextW(_T("10"));
+	m_edit_rec_fps.SetWindowTextW(_T("2"));
+	m_edit_rec_time.SetWindowTextW(_T("5"));
+
+	// F5 REC BUTTON
+	m_btn_rec.SetWindowTextW(F5_IMAGE_START);
+
+	// Set Hook
+	SetHook();
+
+	// Set Dialog init variable
+	isDlgInit = TRUE;
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -340,7 +397,7 @@ bool CGifMakerDlg::SaveCDCtoBMP(CDC* pDC, CRect BitmapSize, int BitCount, const 
 	fopen_s(&pFile, filename, "wb");
 
 	bool bResult = false;
-	if (pFile != NULL)
+	if (pFile != NULL)	
 	{
 		fwrite(pBmpBuf, FileSize, 1, pFile);
 		fclose(pFile);
@@ -355,6 +412,32 @@ bool CGifMakerDlg::SaveCDCtoBMP(CDC* pDC, CRect BitmapSize, int BitCount, const 
 	SelectPalette(pDC->GetSafeHdc(), hPal, FALSE);
 
 	return bResult;
+}
+
+void CGifMakerDlg::SetCaptureSize()
+{
+	CRect area;
+	CSize size;
+	CString strSizeX, strSizeY, strSize;
+
+	//CalibrateCaputreArea();			// calibrate capture area
+	GetCaptureArea(&area);				// get capture area
+	GetRectSize(area, &size);			// get capture size
+	
+	strSizeX.Format(_T("%d"), size.cx);
+	strSizeY.Format(_T("%d"), size.cy);
+	strSize = strSizeX + _T(" X ") + strSizeY;
+
+	m_edit_size.SetWindowTextW(strSize);
+}
+
+void CGifMakerDlg::SetAutoCaptureArea()
+{
+	CStatic *staticSize = (CStatic *)GetDlgItem(IDC_PIC_SCREEN);
+	CRect rect;
+	staticSize->GetClientRect(rect);	// get picture control rect
+	staticSize->ClientToScreen(rect);	// convert coordinate from window client to monitor screen
+	SetCaptureArea(rect);
 }
 
 void CGifMakerDlg::SetCaptureArea(CRect area)
@@ -469,6 +552,18 @@ void CGifMakerDlg::OnSize(UINT nType, int cx, int cy)
 		// x,y 위치 고정, x,y 사이즈 변경
 		m_pic_screen.SetWindowPos(NULL, 0, 0, (sz.cx + (changeSize.cx)), (sz.cy + changeSize.cy), SWP_NOMOVE);
 		OnBnClickedButtonClear();
+
+		// set capture area L,T,R,B
+		if (isDlgInit == TRUE)
+		{
+			CString strType;
+			m_combo_monitor_type.GetWindowTextW(strType);
+			if (strType.Compare(TYPE_CUSTOMIZING) == 0)
+			{
+				// set capture area L,T,R,B
+				SetAutoCaptureArea();
+			}
+		}
 	}
 	
 	//변경 되는 사이즈를 알기위해 이전 사이즈 저장
@@ -482,8 +577,17 @@ void CGifMakerDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 
 	CDialogEx::OnGetMinMaxInfo(lpMMI);
 
-	lpMMI->ptMinTrackSize = CPoint(350, 300);
+	lpMMI->ptMinTrackSize = DlgMinSize;
 
+}
+
+void CGifMakerDlg::SetCaptureAreaTransparant()
+{
+	CDC *pDc = m_pic_screen.GetWindowDC();	// picture control
+	CRect rect;
+	GetClientRect(rect);
+	pDc->FillSolidRect(rect, RGB_TRANSPARANT);
+	SetLayeredWindowAttributes(RGB_TRANSPARANT, 0, LWA_COLORKEY);	// transparant
 }
 
 void CGifMakerDlg::OnBnClickedButtonClear()
@@ -501,34 +605,46 @@ void CGifMakerDlg::OnCbnSelchangeComboMonitorType()
 	// TODO: Add your control notification handler code here
 	// get main monitor info
 	CRect mainRect;
+	CString strType;
 	int monitor_type = m_combo_monitor_type.GetCurSel();	// get monitor type
-		
-	mainRect.left = MonitorsRect[monitor_type].left;
-	mainRect.top = MonitorsRect[monitor_type].top;
-	mainRect.right = MonitorsRect[monitor_type].right;
-	mainRect.bottom = MonitorsRect[monitor_type].bottom;
-	
-	SetCaptureArea(mainRect);
+	m_combo_monitor_type.GetWindowTextW(strType);
+	if (strType.Compare(TYPE_CUSTOMIZING) == 0)
+	{
+		SetAutoCaptureArea();
+	}
+	else
+	{
+		mainRect.left = MonitorsRect[monitor_type].left;
+		mainRect.top = MonitorsRect[monitor_type].top;
+		mainRect.right = MonitorsRect[monitor_type].right;
+		mainRect.bottom = MonitorsRect[monitor_type].bottom;
+
+		SetCaptureArea(mainRect);
+	}
 }
 
-void CGifMakerDlg::OnBnClickedButtonSave()
+void CGifMakerDlg::SaveCaptureImage()
 {
-	// TODO: Add your control notification handler code here
-	SetLayeredWindowAttributes(0, 0, LWA_ALPHA);	// make tool transparant on
-
 	///////////////////////////////////////////////////////////////////
 	// file path
-	CString szFilter = _T("Image (*.BMP, *.PNG, *.JPG) | *.BMP;*.PNG;*.JPG | All Files(*.*)|*.*||");
-	CString strFp;
-	// FALSE -> save dialog / TRUE -> load dialog
-	CFileDialog fsave_dlg(FALSE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR, szFilter);
-	// select ok button
-	if (fsave_dlg.DoModal() == IDOK)
+	CString strFp, strFpNum;
+	CString strSaveFilePath, strFileExtension;
+
+	m_edit_file_path.GetWindowTextW(strFp);
+	strFpNum.Format(_T("%03d"), m_nCaptureNum);
+	strFp += strFpNum;
+	m_nCaptureNum++;
+	// confirm fiel extension
+	strFileExtension = strFp.Right(4);
+	if (strFileExtension.Compare(_T(".bmp")) != 0)
 	{
-		strFp = fsave_dlg.GetPathName();	// file path
+		strSaveFilePath = strFp + _T(".bmp");
 	}
-	Sleep(150);	// 100ms정도 다이얼로그 잔상이 남음
-	
+	else
+	{
+		strSaveFilePath = strFp;
+	}
+
 	///////////////////////////////////////////////////////////////////
 	// capture area
 	CRect captureRect;
@@ -537,19 +653,78 @@ void CGifMakerDlg::OnBnClickedButtonSave()
 
 	///////////////////////////////////////////////////////////////////
 	// save image
-	CString strSaveFilePath, strFileExtension;
-
-	strFileExtension = strFp.Right(4);
-	if (strFileExtension.Compare(_T(".bmp")) != 0)
-	{
-		strSaveFilePath = strFp + _T(".bmp");
-	}
-
 	SaveCaptureArea(captureRect, strSaveFilePath);
-	
-	SetLayeredWindowAttributes(0, 255, LWA_ALPHA);	// make tool transparant off
 }
 
+
+void CGifMakerDlg::OnBnClickedButtonSave()
+{
+	// TODO: Add your control notification handler code here
+	SetLayeredWindowAttributes(0, 0, LWA_ALPHA);	// make tool transparant on
+	
+	SaveCaptureImage();
+
+	SetLayeredWindowAttributes(RGB_TRANSPARANT, 255, LWA_COLORKEY | LWA_ALPHA);	// make tool transparant off
+}
+
+
+LRESULT CALLBACK KeyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam)
+{
+	LPKBDLLHOOKSTRUCT pkbhs = (LPKBDLLHOOKSTRUCT)lParam;
+	if (nCode == HC_ACTION)
+	{
+		if (pkbhs->vkCode == VK_F3)
+		{
+			DWORD dwFlags = (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) ? 0 : KEYEVENTF_KEYUP;
+			if (dwFlags == 0)
+			{
+				CGifMakerDlg* pMainDlg = (CGifMakerDlg*)::AfxGetMainWnd();	// get main dialog pointer
+				pMainDlg->OnBnClickedButtonFileName();
+				return TRUE;
+			}
+		}
+		else if (pkbhs->vkCode == VK_F4)
+		{
+			DWORD dwFlags = (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) ? 0 : KEYEVENTF_KEYUP;
+			if (dwFlags == 0)
+			{
+				CGifMakerDlg* pMainDlg = (CGifMakerDlg*)::AfxGetMainWnd();	// get main dialog pointer
+				pMainDlg->OnBnClickedButtonSave();
+				return TRUE;
+			}
+		}
+		else if (pkbhs->vkCode == VK_F5)
+		{
+			DWORD dwFlags = (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) ? 0 : KEYEVENTF_KEYUP;
+			if (dwFlags == 0)
+			{
+				CGifMakerDlg* pMainDlg = (CGifMakerDlg*)::AfxGetMainWnd();	// get main dialog pointer
+				pMainDlg->OnBnClickedButtonRec();
+				return TRUE;
+			}
+		}
+	}
+
+	return CallNextHookEx(g_hook, nCode, wParam, lParam);
+}
+
+BOOL CGifMakerDlg::SetHook()
+{
+	if (g_hook != NULL)
+		UnHook();
+	g_hook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardHookProc, (HINSTANCE)theApp.m_hInstance, NULL);
+
+	return TRUE;
+}
+
+BOOL CGifMakerDlg::UnHook()
+{
+	if (g_hook != NULL)
+	{
+		UnhookWindowsHookEx(g_hook);
+	}
+	return TRUE;
+}
 
 BOOL CGifMakerDlg::PreTranslateMessage(MSG* pMsg)
 {
@@ -561,7 +736,12 @@ BOOL CGifMakerDlg::PreTranslateMessage(MSG* pMsg)
 	}
 	else if (pMsg->wParam == VK_ESCAPE)		//esc
 	{
-		SaveRecordingImage_End();
+		//return TRUE;
+	}
+	else if (pMsg->wParam == VK_F1)			//F1
+	{
+		CAboutDlg dlgAbout;
+		dlgAbout.DoModal();
 		return TRUE;
 	}
 
@@ -654,6 +834,15 @@ HBRUSH CGifMakerDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 		OnBnClickedButtonClear();
 	}
 
+	switch (nCtlColor)
+	{
+		case CTLCOLOR_STATIC:
+		{
+			pDC->SetTextColor(BLACK);
+			pDC->SetBkColor(SOFT_BLUE);
+		}
+		break;
+	}
 	// TODO:  Return a different brush if the default is not desired
 	return hbr;
 }
@@ -674,11 +863,8 @@ void CGifMakerDlg::OnBnClickedButtonAreaDetail()
 void CGifMakerDlg::OnBnClickedButtonAreaSetting()
 {
 	// TODO: Add your control notification handler code here
-	CStatic *staticSize = (CStatic *)GetDlgItem(IDC_PIC_SCREEN);
-	CRect rect;
-	staticSize->GetClientRect(rect);	// get picture control rect
-	staticSize->ClientToScreen(rect);	// convert coordinate from window client to monitor screen
-	SetCaptureArea(rect);
+	// set capture area L,T,R,B
+	SetAutoCaptureArea();
 
 	OnBnClickedButtonCapture();
 }
@@ -717,9 +903,13 @@ void CGifMakerDlg::OnBnClickedButtonRec()
 	// TODO: Add your control notification handler code here
 	CString strRecButton;
 	m_btn_rec.GetWindowTextW(strRecButton);
-	if (strRecButton.Compare(_T("REC")) == 0)
+	if (strRecButton.Compare(F5_IMAGE_START) == 0)
 	{
 		SaveRecordingImage_Start();
+	}
+	else if (strRecButton.Compare(F5_IMAGE_WAIT) == 0)
+	{
+		
 	}
 	else
 	{
@@ -729,20 +919,9 @@ void CGifMakerDlg::OnBnClickedButtonRec()
 
 void CGifMakerDlg::SaveRecordingImage_Start()
 {
+	m_btn_rec.SetWindowTextW(F5_IMAGE_WAIT);
+
 	SetLayeredWindowAttributes(0, 0, LWA_ALPHA);	// make tool transparant on
-
-	///////////////////////////////////////////////////////////////////
-	// file path
-	CString szFilter = _T("Image (*.BMP, *.PNG, *.JPG) | *.BMP;*.PNG;*.JPG | All Files(*.*)|*.*||");
-	// FALSE -> save dialog / TRUE -> load dialog
-	CFileDialog fsave_dlg(FALSE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR, szFilter);
-	// select ok button
-	if (fsave_dlg.DoModal() == IDOK)
-	{
-		m_strRecFilePath = fsave_dlg.GetPathName();	// file path
-	}
-	Sleep(150);	// 100ms정도 다이얼로그 잔상이 남음
-
 	///////////////////////////////////////////////////////////////////
 	// capture area
 	CalibrateCaputreArea();					// calibrate capture area
@@ -761,25 +940,20 @@ void CGifMakerDlg::SaveRecordingImage_Start()
 	float fb_timer;		// second per 1 frame buffer
 	fb_timer = 1000.0 / fps;
 	m_nFbMax = fps * rec_time;
-
+	
+	m_nCaptureNum = 1;
 	///////////////////////////////////////////////////////////////////
 	// start timer - save recording image
-	m_nRecFb = 0;
 	SetTimer(TID_REC, (UINT)fb_timer, NULL);
 
-	m_btn_rec.SetWindowTextW(_T("REC STOP"));
+	m_btn_rec.SetWindowTextW(F5_IMAGE_STOP);
 }
 
 void CGifMakerDlg::SaveRecordingImage_Execute()
 {
-	CString strRecFilePath, strFbNum;
+	SaveCaptureImage();
 
-	strFbNum.Format(_T("%03d"), m_nRecFb);
-	strRecFilePath = m_strRecFilePath + strFbNum + _T(".bmp");
-	SaveCaptureArea(m_recRec, strRecFilePath);
-
-	m_nRecFb++;
-	if (m_nRecFb > m_nFbMax)
+	if (m_nCaptureNum > m_nFbMax)
 	{
 		SaveRecordingImage_End();
 	}
@@ -788,10 +962,8 @@ void CGifMakerDlg::SaveRecordingImage_Execute()
 void CGifMakerDlg::SaveRecordingImage_End()
 {
 	KillTimer(TID_REC);
-	m_btn_rec.SetWindowTextW(_T("REC"));
-	SetLayeredWindowAttributes(0, 255, LWA_ALPHA);	// make tool transparant off
-
-	m_nRecFb = 0;
+	m_btn_rec.SetWindowTextW(F5_IMAGE_START);
+	SetLayeredWindowAttributes(RGB_TRANSPARANT, 255, LWA_COLORKEY | LWA_ALPHA);	// make tool transparant off
 }
 
 void CGifMakerDlg::OnTimer(UINT_PTR nIDEvent)
@@ -808,4 +980,140 @@ void CGifMakerDlg::OnTimer(UINT_PTR nIDEvent)
 		break;
 	}
 	CDialogEx::OnTimer(nIDEvent);
+}
+
+BOOL CGifMakerDlg::OnEraseBkgnd(CDC* pDC)
+{
+	// TODO: Add your message handler code here and/or call default
+	CRect bgRect;
+	GetClientRect(bgRect);
+	pDC->FillSolidRect(bgRect, SOFT_BLUE);
+	return true;
+
+	//return CDialogEx::OnEraseBkgnd(pDC);
+}
+
+
+void CGifMakerDlg::OnClose()
+{
+	// TODO: Add your message handler code here and/or call default
+
+	CDialogEx::OnClose();
+
+	UnHook();
+}
+
+
+void CGifMakerDlg::OnEnChangeEditLeft()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialogEx::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+
+	// TODO:  Add your control notification handler code here
+	static CString strLeftPre = _T("0");
+	CString strLeftNow;
+	m_edit_left.GetWindowTextW(strLeftNow);
+	if (strLeftNow.Compare(strLeftPre) != 0)
+	{
+		SetCaptureSize();
+		strLeftPre = strLeftNow;
+	}
+}
+
+
+void CGifMakerDlg::OnEnChangeEditRight()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialogEx::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+
+	// TODO:  Add your control notification handler code here
+	static CString strRightPre = _T("0");
+	CString strRightNow;
+	m_edit_right.GetWindowTextW(strRightNow);
+	if (strRightNow.Compare(strRightPre) != 0)
+	{
+		SetCaptureSize();
+		strRightPre = strRightNow;
+	}
+}
+
+
+void CGifMakerDlg::OnEnChangeEditTop()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialogEx::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+
+	// TODO:  Add your control notification handler code here
+	static CString strTopPre = _T("0");
+	CString strTopNow;
+	m_edit_top.GetWindowTextW(strTopNow);
+	if (strTopNow.Compare(strTopPre) != 0)
+	{
+		SetCaptureSize();
+		strTopPre = strTopNow;
+	}
+}
+
+
+void CGifMakerDlg::OnEnChangeEditBottom()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialogEx::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+
+	// TODO:  Add your control notification handler code here
+	static CString strBottomPre = _T("0");
+	CString strBottomNow;
+	m_edit_bottom.GetWindowTextW(strBottomNow);
+	if (strBottomNow.Compare(strBottomPre) != 0)
+	{
+		SetCaptureSize();
+		strBottomPre = strBottomNow;
+	}
+}
+
+
+void CGifMakerDlg::OnMove(int x, int y)
+{
+	CDialogEx::OnMove(x, y);
+
+	// TODO: Add your message handler code here
+	if(isDlgInit == TRUE)
+	{
+		CString strType;
+		m_combo_monitor_type.GetWindowTextW(strType);
+		if (strType.Compare(TYPE_CUSTOMIZING) == 0)
+		{
+			// set capture area L,T,R,B
+			SetAutoCaptureArea();
+		}
+	}
+}
+
+void CGifMakerDlg::OnBnClickedButtonFileName()
+{
+	// TODO: Add your control notification handler code here
+	// capture number init
+	m_nCaptureNum = 1;
+
+	///////////////////////////////////////////////////////////////////
+	// file path
+	CString szFilter = _T("Image (*.BMP, *.PNG, *.JPG) | *.BMP;*.PNG;*.JPG | All Files(*.*)|*.*||");
+	CString strFp;
+	// FALSE -> save dialog / TRUE -> load dialog
+	CFileDialog fsave_dlg(FALSE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR, szFilter);
+	// select ok button
+	if (fsave_dlg.DoModal() == IDOK)
+	{
+		strFp = fsave_dlg.GetPathName();	// file path
+		
+		m_edit_file_path.SetWindowTextW(strFp);
+	}
 }

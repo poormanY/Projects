@@ -34,7 +34,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	int AreaFlag;
-	int m_nRecFb;
+	int m_nCaptureNum;
 	int m_nFbMax;
 	CRect m_recRec;
 	CString m_strRecFilePath;
@@ -48,8 +48,14 @@ public:
 	void CalibrateCaputreArea();
 	void SaveCaptureArea(CRect area, CString strFilePath);
 	void SetCaptureArea(CRect area);
+	void SetAutoCaptureArea(void);
 	void GetCaptureArea(CRect *area);
 	void GetRectSize(CRect ret, CSize *pSize);
+		
+	void SetCaptureSize(void);
+	void SetCaptureAreaTransparant();
+
+	void SaveCaptureImage();
 
 	/////////////////////////////////////////////////////
 	CComboBox m_combo_monitor_type;
@@ -64,6 +70,8 @@ public:
 	CEdit m_edit_bottom;
 	afx_msg void OnCbnSelchangeComboMonitorType();
 	afx_msg void OnBnClickedButtonSave();
+	BOOL SetHook();
+	BOOL UnHook();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
@@ -76,4 +84,14 @@ public:
 	afx_msg void OnBnClickedButtonRec();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	CButton m_btn_rec;
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg void OnClose();
+	CEdit m_edit_size;
+	afx_msg void OnEnChangeEditLeft();
+	afx_msg void OnEnChangeEditRight();
+	afx_msg void OnEnChangeEditTop();
+	afx_msg void OnEnChangeEditBottom();
+	afx_msg void OnMove(int x, int y);
+	CEdit m_edit_file_path;
+	afx_msg void OnBnClickedButtonFileName();
 };
