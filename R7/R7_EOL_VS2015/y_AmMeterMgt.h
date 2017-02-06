@@ -4,6 +4,10 @@
 #include "y_JDEFINE.h"
 #include "y_Uart4Pc.h"
 
+#define _AMMETER_NONE       0
+#define _AMMETER_READ       1
+#define _AMMETER_WRITE      2
+
 typedef struct _stQuery_ {
 	u08 id;
 	u08 func;

@@ -34,8 +34,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	int AreaFlag;
-	int m_nCaptureNum;
-	int m_nFbMax;
 	CRect m_recRec;
 	CString m_strRecFilePath;
 
@@ -54,8 +52,13 @@ public:
 		
 	void SetCaptureSize(void);
 	void SetCaptureAreaTransparant();
-
+	
+	// Capture
+	int m_nCaptureNum;
+	int m_nRecNum;
+	int m_nFb, m_nFbMax;
 	void SaveCaptureImage();
+	void SaveRecImage();
 
 	/////////////////////////////////////////////////////
 	CComboBox m_combo_monitor_type;
@@ -94,4 +97,5 @@ public:
 	afx_msg void OnMove(int x, int y);
 	CEdit m_edit_file_path;
 	afx_msg void OnBnClickedButtonFileName();
+	afx_msg void OnBnClickedButtonGif();
 };

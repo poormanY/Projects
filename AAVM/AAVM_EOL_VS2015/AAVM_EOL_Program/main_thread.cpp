@@ -1772,7 +1772,8 @@ static bool Step_Test_AAVM_ALL(void)
         nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
         pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "BF609 F/W 버전");
         pszSrc = szCAN_Ver_BF;
-        pszTgt = "2.8";
+        //pszTgt = "2.8
+		pszTgt = "2.9.3";
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, pszTgt);
 
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, pszSrc);
@@ -1791,7 +1792,8 @@ static bool Step_Test_AAVM_ALL(void)
         nListPos = pMainDlg->m_LIST_PROCESS.GetItemCount();
         pMainDlg->m_LIST_PROCESS.InsertItem(nListPos, "에머랄드 F/W 버전");
         pszSrc = szCAN_Ver_EL_Main;
-        pszTgt = "1.12";
+        //pszTgt = "1.12";
+		pszTgt = "1.13";
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 1, pszTgt);
 
         pMainDlg->m_LIST_PROCESS.SetItemText(nListPos, 2, pszSrc);
@@ -1952,6 +1954,12 @@ static bool Step_Test_AAVM_ALL(void)
 			Car_Types[0] = 17;
 			Car_Types[1] = 18;
 			Car_Types[2] = 19;
+		}
+		else if (pMainDlg->m_EDIT_CAR_NAME == "21k8-46400 통합형")
+		{
+			Car_Types[0] = 29;
+			Car_Types[1] = 30;
+			Car_Types[2] = 31;
 		}
 		else
 		{

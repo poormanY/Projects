@@ -6,6 +6,7 @@
 #include "GifMaker.h"
 #include "GifMakerDlg.h"
 #include "afxdialogex.h"
+#include "PictureEx.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -147,6 +148,7 @@ BEGIN_MESSAGE_MAP(CGifMakerDlg, CDialogEx)
 	ON_EN_CHANGE(IDC_EDIT_BOTTOM, &CGifMakerDlg::OnEnChangeEditBottom)
 	ON_WM_MOVE()
 	ON_BN_CLICKED(IDC_BUTTON_FILE_NAME, &CGifMakerDlg::OnBnClickedButtonFileName)
+	ON_BN_CLICKED(IDC_BUTTON_GIF, &CGifMakerDlg::OnBnClickedButtonGif)
 END_MESSAGE_MAP()
 
 
@@ -217,6 +219,7 @@ BOOL CGifMakerDlg::OnInitDialog()
 	// set file path
 	m_edit_file_path.SetWindowTextW(FILE_PATH_DEFAULT);
 	m_nCaptureNum = 1;
+	m_nRecNum = 1;
 
 	// Monitor Type  Combo Box
 	int comboIdx;
@@ -632,6 +635,7 @@ void CGifMakerDlg::SaveCaptureImage()
 
 	m_edit_file_path.GetWindowTextW(strFp);
 	strFpNum.Format(_T("%03d"), m_nCaptureNum);
+	strFp += _T("C");
 	strFp += strFpNum;
 	m_nCaptureNum++;
 	// confirm fiel extension
@@ -656,6 +660,40 @@ void CGifMakerDlg::SaveCaptureImage()
 	SaveCaptureArea(captureRect, strSaveFilePath);
 }
 
+void CGifMakerDlg::SaveRecImage()
+{
+	///////////////////////////////////////////////////////////////////
+	// file path
+	CString strFp, strFpNum;
+	CString strSaveFilePath, strFileExtension;
+
+	m_edit_file_path.GetWindowTextW(strFp);
+	strFpNum.Format(_T("%03d"), m_nRecNum);
+	strFp += _T("R");
+	strFp += strFpNum;
+	m_nRecNum++;
+	m_nFb++;
+	// confirm fiel extension
+	strFileExtension = strFp.Right(4);
+	if (strFileExtension.Compare(_T(".bmp")) != 0)
+	{
+		strSaveFilePath = strFp + _T(".bmp");
+	}
+	else
+	{
+		strSaveFilePath = strFp;
+	}
+
+	///////////////////////////////////////////////////////////////////
+	// capture area
+	CRect captureRect;
+	CalibrateCaputreArea();						// calibrate capture area
+	GetCaptureArea(&captureRect);				// get capture area
+
+	///////////////////////////////////////////////////////////////////
+	// save image
+	SaveCaptureArea(captureRect, strSaveFilePath);
+}
 
 void CGifMakerDlg::OnBnClickedButtonSave()
 {
@@ -700,6 +738,16 @@ LRESULT CALLBACK KeyboardHookProc(int nCode, WPARAM wParam, LPARAM lParam)
 			{
 				CGifMakerDlg* pMainDlg = (CGifMakerDlg*)::AfxGetMainWnd();	// get main dialog pointer
 				pMainDlg->OnBnClickedButtonRec();
+				return TRUE;
+			}
+		}
+		else if (pkbhs->vkCode == VK_F6)
+		{
+			DWORD dwFlags = (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) ? 0 : KEYEVENTF_KEYUP;
+			if (dwFlags == 0)
+			{
+				CGifMakerDlg* pMainDlg = (CGifMakerDlg*)::AfxGetMainWnd();	// get main dialog pointer
+				pMainDlg->OnBnClickedButtonGif();
 				return TRUE;
 			}
 		}
@@ -929,19 +977,18 @@ void CGifMakerDlg::SaveRecordingImage_Start()
 
 	///////////////////////////////////////////////////////////////////
 	// frame buffer
-	float fps;			// frame buffer per second
-	float rec_time;		// recording time
+	double fps;			// frame buffer per second
+	double rec_time;		// recording time
 	CString strFps, strTime;
 	m_edit_rec_fps.GetWindowTextW(strFps);
 	m_edit_rec_time.GetWindowTextW(strTime);
 	fps = _ttof(strFps);
 	rec_time = _ttof(strTime);
 
-	float fb_timer;		// second per 1 frame buffer
+	double fb_timer;		// second per 1 frame buffer
 	fb_timer = 1000.0 / fps;
 	m_nFbMax = fps * rec_time;
-	
-	m_nCaptureNum = 1;
+	m_nFb = 1;
 	///////////////////////////////////////////////////////////////////
 	// start timer - save recording image
 	SetTimer(TID_REC, (UINT)fb_timer, NULL);
@@ -951,9 +998,9 @@ void CGifMakerDlg::SaveRecordingImage_Start()
 
 void CGifMakerDlg::SaveRecordingImage_Execute()
 {
-	SaveCaptureImage();
+	SaveRecImage();
 
-	if (m_nCaptureNum > m_nFbMax)
+	if (m_nFb > m_nFbMax)
 	{
 		SaveRecordingImage_End();
 	}
@@ -1102,6 +1149,7 @@ void CGifMakerDlg::OnBnClickedButtonFileName()
 	// TODO: Add your control notification handler code here
 	// capture number init
 	m_nCaptureNum = 1;
+	m_nRecNum = 1;
 
 	///////////////////////////////////////////////////////////////////
 	// file path
@@ -1116,4 +1164,12 @@ void CGifMakerDlg::OnBnClickedButtonFileName()
 		
 		m_edit_file_path.SetWindowTextW(strFp);
 	}
+}
+
+
+void CGifMakerDlg::OnBnClickedButtonGif()
+{
+	// TODO: Add your control notification handler code here
+	ShellExecute(this->m_hWnd, TEXT("open"), TEXT("IEXPLORE.EXE"), TEXT(" http://ezgif.com/maker"), NULL, SW_SHOW);
+
 }

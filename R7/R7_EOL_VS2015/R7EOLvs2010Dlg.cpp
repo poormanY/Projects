@@ -19,6 +19,7 @@
 #include "SettingDlg.h"
 #include "ScrewDlg.h"
 #include "BarCodeDlg.h"
+#include "AmpereDlg.h"
 #include "y_LanguagePack.h"
 
 #ifdef _DEBUG
@@ -90,6 +91,7 @@ BEGIN_MESSAGE_MAP(CR7EOLvs2010Dlg, CDialogEx)
 	ON_WM_CTLCOLOR()
 	ON_BN_CLICKED(IDC_BUTTON_SETTING, &CR7EOLvs2010Dlg::OnBnClickedButtonSetting)
 	ON_BN_CLICKED(IDC_BUTTON_BARCODE, &CR7EOLvs2010Dlg::OnBnClickedButtonBarcode)
+	ON_BN_CLICKED(IDC_BUTTON_AMMETER, &CR7EOLvs2010Dlg::OnBnClickedButtonAmmeter)
 END_MESSAGE_MAP()
 
 
@@ -135,8 +137,7 @@ BOOL CR7EOLvs2010Dlg::OnInitDialog()
 	}
 	// Set Language ( Korean, Chinese, English )
 	EOLLanguage.SET_LANGUAE_PACK(m_language);
-
-
+	
 	strProductLine	= pEolSetting->ReadSetting(TESTER_LINE);
 	strTesterNum	= pEolSetting->ReadSetting(TESTER_NUM);
 	strTester[0]	= pEolSetting->ReadSetting(TESTER_1);
@@ -747,5 +748,13 @@ void CR7EOLvs2010Dlg::OnBnClickedButtonBarcode()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	BarCodeDlg dlg;
+	dlg.DoModal();
+}
+
+
+void CR7EOLvs2010Dlg::OnBnClickedButtonAmmeter()
+{
+	// TODO: Add your control notification handler code here
+	AmpereDlg dlg;
 	dlg.DoModal();
 }

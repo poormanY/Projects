@@ -105,4 +105,5 @@ public:
 	afx_msg void OnBnClickedButtonSetting();
 	afx_msg void OnBnClickedButtonBarcode();
 	CButton m_button_close;
+	afx_msg void OnBnClickedButtonAmmeter();
 };
